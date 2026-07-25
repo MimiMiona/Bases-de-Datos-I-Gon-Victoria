@@ -26,15 +26,10 @@
 El presente proyecto tiene como objetivo principal diseñar e implementar una base de datos destinada a la gestión del proceso de donación y trasplante de órganos, tomando como referencia la Ley Justina (Ley N.º 27.447). La finalidad del sistema es centralizar la información involucrada en cada etapa del proceso, garantizando su integridad, seguridad y trazabilidad, además de facilitar la administración y consulta de los datos. Algunos objetivos claves para el proyecto son:
 
 1. **Registrar donantes y receptores:** El sistema permitirá almacenar de manera organizada la información necesaria de las personas involucradas en el proceso de donación y trasplante.
-
 2. **Administrar la lista de espera:** Permite administrar los pacientes que esperan trasplante, manteniendo un control ordenado de las solicitudes.
-
 3. **Gestionar órganos disponibles:** Registrar los órganos aptos para trasplante, indicando su tipo, grupo sanguíneo, estado y disponibilidad para su posterior asignación.
-
 4. **Registrar los procedimientos de trasplante:** Se almacenará la información correspondiente a cada trasplante realizado, relacionando donantes, receptores, hospitales y profesionales intervinientes.
-
 5. **Facilitar consultas y estadísticas:** permitir la obtención de información útil para el seguimiento de pacientes, el control de los procesos y la generación de estadísticas relacionadas con las donaciones y los trasplantes.
-
 6. **Escalabilidad y crecimiento futuro:** Aunque el sistema comienza con la gestión de donación de órganos, podrá ampliarse en futuras versiones para administrar también la donación de tejidos, células y otros elementos contemplados por la Ley Justina.
 
 ## Alcance del Proyecto
