@@ -39,7 +39,7 @@ El alcance de este proyecto se centra en cubrir las funciones para la administra
 2. **Gestión de hospitales y profesionales responsables de los procedimientos:** administración de los hospitales y profesionales de la salud involucrados en el proceso de donación y trasplante, permitiendo registrar su participación en cada procedimiento.
 3. **Administración de órganos disponibles para trasplante:** registro de los órganos disponibles indicando su tipo, grupo sanguíneo y disponibilidad para su asignación.
 4. **Registro y seguimiento de la lista de espera:** permitirá administrar el estado de los pacientes desde su incorporación a la lista hasta la realización del trasplante o su baja del registro.
-5. **Generación de consultas y estadísticas relacionadas con donaciones y trasplantes:** Rlaboración de informes sobre la cantidad de donantes registrados, órganos disponibles, trasplantes realizados y pacientes en lista de espera, facilitando el seguimiento y la toma de decisiones.
+5. **Generación de consultas y estadísticas relacionadas con donaciones y trasplantes:** Elaboración de informes sobre la cantidad de donantes registrados, órganos disponibles, trasplantes realizados y pacientes en lista de espera, facilitando el seguimiento y la toma de decisiones.
 
 ### Limitaciones del Proyecto
 1. El sistema se limita a la **gestión administrativa de la información** vinculada al proceso de donación y trasplante, sin almacenar la historia clínica completa de los pacientes.

@@ -64,10 +64,9 @@ GO
 CREATE OR ALTER PROCEDURE dbo.insertarTransplante
     @id_transplante INT,
     @fecha_trasplante DATE,
-    @estado INT,
+    @estado VARCHAR(30),
     @observacion VARCHAR(100),
     @id_organo INT,
-    @id_donante INT,
     @id_hospital INT,
     @id_doctor INT,
     @id_receptor INT
@@ -83,7 +82,6 @@ BEGIN
         estado,
         observacion,
         id_organo,
-        id_donante,
         id_hospital,
         id_doctor,
         id_receptor
@@ -95,7 +93,6 @@ BEGIN
         @estado,
         @observacion,
         @id_organo,
-        @id_donante,
         @id_hospital,
         @id_doctor,
         @id_receptor
@@ -119,11 +116,10 @@ BEGIN TRY
     INSERT INTO dbo.Transplante
     VALUES
     (
-        (SELECT ISNULL(MAX(id_transplante), 0) + 1 FROM dbo.Transplante),
+        (SELECT ISNULL(MAX(id_transplante),0)+1 FROM dbo.Transplante),
         '2026-07-20',
-        1,
+        'Programado',
         'Prueba',
-        1,
         1,
         1,
         1,
@@ -156,9 +152,8 @@ EXECUTE AS USER = 'UsuarioMedico';
 EXEC dbo.insertarTransplante
     @NuevoIdTransplante,
     '2026-07-20',
-    1,
+    'En Proceso',
     'Trasplante realizado correctamente',
-    1,
     1,
     1,
     1,

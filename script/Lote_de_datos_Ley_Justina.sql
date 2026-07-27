@@ -20,7 +20,6 @@ VALUES
 
 SELECT * FROM Donante;
 
-
 /*====================================================
     TABLA TIPO ORGANO
 ====================================================*/
@@ -36,7 +35,6 @@ VALUES
 
 SELECT * FROM TipoOrgano;
 
-
 /*====================================================
     TABLA ORGANO
 ====================================================*/
@@ -44,11 +42,11 @@ SELECT * FROM TipoOrgano;
 INSERT INTO Organo
 (id_organo, estado, id_donante, id_tipoOrgano)
 VALUES
-(1, 'Disponible',   1, 1),
-(2, 'Asignado',     2, 2),
+(1, 'Disponible', 1, 1),
+(2, 'Asignado', 2, 2),
 (3, 'Trasplantado', 3, 3),
-(4, 'Disponible',   4, 4),
-(5, 'Disponible',   5, 5);
+(4, 'Disponible', 4, 4),
+(5, 'Disponible', 5, 5);
 
 SELECT * FROM Organo;
 
@@ -57,16 +55,15 @@ SELECT * FROM Organo;
 ====================================================*/
 
 INSERT INTO Receptor
-(id_receptor, nombre, apellido, edad, genero, peso, tipo_sangre, telefono, dni, contraseña, id_organo)
+(id_receptor, nombre, apellido, edad, genero, peso, tipo_sangre, telefono, dni, contraseña)
 VALUES
-(1, 'Ana', 'López', 26, 'Femenino', 58, 'O+', '3794111111', 40111222, 'ana123', 1),
-(2, 'Martín', 'Sosa', 45, 'Masculino', 84, 'A+', '3794111112', 32222333, 'martin123', 2),
-(3, 'Valentina', 'Ríos', 18, 'Femenino', 55, 'B+', '3794111113', 45111444, 'vale123', 3),
-(4, 'Diego', 'Romero', 51, 'Masculino', 81, 'AB+', '3794111114', 28111555, 'diego123', 4),
-(5, 'Camila', 'Acosta', 37, 'Femenino', 64, 'O-', '3794111115', 35111666, 'camila123', 5);
+(1, 'Ana', 'López', 26, 'Femenino', 58, 'O+', '3794111111', 40111222, 'ana123'),
+(2, 'Martín', 'Sosa', 45, 'Masculino', 84, 'A+', '3794111112', 32222333, 'martin123'),
+(3, 'Valentina', 'Ríos', 18, 'Femenino', 55, 'B+', '3794111113', 45111444, 'vale123'),
+(4, 'Diego', 'Romero', 51, 'Masculino', 81, 'AB+', '3794111114', 28111555, 'diego123'),
+(5, 'Camila', 'Acosta', 37, 'Femenino', 64, 'O-', '3794111115', 35111666, 'camila123');
 
 SELECT * FROM Receptor;
-
 
 /*====================================================
     TABLA HOSPITAL
@@ -83,7 +80,6 @@ VALUES
 
 SELECT * FROM Hospital;
 
-
 /*====================================================
     TABLA DOCTOR
 ====================================================*/
@@ -99,7 +95,6 @@ VALUES
 
 SELECT * FROM Doctor;
 
-
 /*====================================================
     TABLA ADMINISTRATIVO
 ====================================================*/
@@ -108,80 +103,54 @@ INSERT INTO Administrativo
 (id_administrativo, nombre, apellido, numero_legajo, dni, telefono, contraseña, id_hospital)
 VALUES
 (1, 'Julieta', 'Luna', 1001, 37111222, '3794333331', 'admin123', 1),
-(2, 'Tomás', 'Alvarez', 1002, 38111333, '3794333332', 'admin123', 2),
+(2, 'Tomás', 'Álvarez', 1002, 38111333, '3794333332', 'admin123', 2),
 (3, 'Florencia', 'Castro', 1003, 39111444, '3794333333', 'admin123', 3),
 (4, 'Gabriel', 'Moreno', 1004, 40111555, '3794333334', 'admin123', 4),
 (5, 'Sofía', 'Ramos', 1005, 41111666, '3794333335', 'admin123', 5);
 
 SELECT * FROM Administrativo;
 
-
 /*====================================================
     TABLA ASIGNACION
 ====================================================*/
 
-/*
-Estado:
-1 = Asignada
-2 = Completada
-*/
-
 INSERT INTO Asignacion
 (id_asignacion, fecha_asignacion, estado, observacion, id_organo, id_receptor)
 VALUES
-(1, '2026-05-10', 1, 'Asignación realizada', 1, 1),
-(2, '2026-05-15', 1, 'Asignación realizada', 2, 2),
-(3, '2026-05-20', 2, 'Trasplante realizado', 3, 3),
-(4, '2026-06-01', 1, 'Pendiente de cirugía', 4, 4),
-(5, '2026-06-05', 1, 'Pendiente de cirugía', 5, 5);
+(1, '2026-05-10', 'Asignada', 'Asignación realizada', 1, 1),
+(2, '2026-05-15', 'Asignada', 'Asignación realizada', 2, 2),
+(3, '2026-05-20', 'Completada', 'Trasplante realizado', 3, 3),
+(4, '2026-06-01', 'Asignada', 'Pendiente de cirugía', 4, 4),
+(5, '2026-06-05', 'Asignada', 'Pendiente de cirugía', 5, 5);
 
 SELECT * FROM Asignacion;
-
 
 /*====================================================
     TABLA LISTA ESPERA
 ====================================================*/
 
-/*
-Estado:
-1 = Activo
-2 = Finalizado
-
-Prioridad:
-1 = Alta
-2 = Media
-3 = Baja
-*/
-
 INSERT INTO ListaEspera
 (id_lista, fecha_ingreso, fecha_baja, estado, prioridad, id_receptor, id_tipoOrgano, id_asignacion)
 VALUES
-(1, '2026-03-01', '2026-05-10', 1, 1, 1, 1, 1),
-(2, '2026-03-05', '2026-05-15', 1, 2, 2, 2, 2),
-(3, '2026-03-10', '2026-05-20', 2, 1, 3, 3, 3),
-(4, '2026-04-01', '2026-06-01', 1, 3, 4, 4, 4),
-(5, '2026-04-10', '2026-06-05', 1, 2, 5, 5, 5);
+(1, '2026-03-01', '2026-05-10', 'Finalizado', 'Alta', 1, 1, 1),
+(2, '2026-03-05', '2026-05-15', 'Finalizado', 'Media', 2, 2, 2),
+(3, '2026-03-10', '2026-05-20', 'Finalizado', 'Alta', 3, 3, 3),
+(4, '2026-04-01', NULL, 'Activo', 'Baja', 4, 4, 4),
+(5, '2026-04-10', NULL, 'Activo', 'Media', 5, 5, 5);
 
 SELECT * FROM ListaEspera;
-
 
 /*====================================================
     TABLA TRANSPLANTE
 ====================================================*/
 
-/*
-Estado:
-0 = En proceso
-1 = Finalizado
-*/
-
 INSERT INTO Transplante
-(id_transplante, fecha_trasplante, estado, observacion, id_organo, id_donante, id_hospital, id_doctor, id_receptor)
+(id_transplante, fecha_trasplante, estado, observacion, id_organo, id_hospital, id_doctor, id_receptor)
 VALUES
-(1, '2026-05-11', 1, 'Trasplante exitoso', 1, 1, 1, 1, 1),
-(2, '2026-05-16', 1, 'Paciente estable', 2, 2, 2, 2, 2),
-(3, '2026-05-21', 1, 'Recuperación favorable', 3, 3, 3, 3, 3),
-(4, '2026-06-02', 0, 'En observación', 4, 4, 4, 4, 4),
-(5, '2026-06-06', 0, 'Postoperatorio', 5, 5, 5, 5, 5);
+(1, '2026-05-11', 'Finalizado', 'Trasplante exitoso', 1, 1, 1, 1),
+(2, '2026-05-16', 'Finalizado', 'Paciente estable', 2, 2, 2, 2),
+(3, '2026-05-21', 'Finalizado', 'Recuperación favorable', 3, 3, 3, 3),
+(4, '2026-06-02', 'En Proceso', 'En observación', 4, 4, 4, 4),
+(5, '2026-06-06', 'En Proceso', 'Postoperatorio', 5, 5, 5, 5);
 
-SELECT * FROM Transplante;
+SELECT * FROM Transplante;  

@@ -2,18 +2,16 @@
             -- TEMA 4: MANEJO DE TIPO DE DATOS JSON
 -------------------------------------------------------------------
 
-IF DB_ID('Ley_Justina') IS NULL
-    CREATE DATABASE Ley_Justina;
-GO
-
 USE Ley_Justina;
 GO
+
 
 -------------------------------------------------------------------
               -- EJEMPLOS BASICOS DE GENERACION DE JSON
 -------------------------------------------------------------------
 
 -- Convertir registros relacionales a JSON
+
 SELECT TOP 1
     id_donante,
     nombre,
@@ -33,8 +31,7 @@ SELECT TOP 1
 FROM Receptor
 FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
 
-SELECT *
-FROM Transplante
+SELECT * FROM Transplante
 FOR JSON PATH;
 
 -------------------------------------------------------------------
@@ -44,157 +41,187 @@ FOR JSON PATH;
 DROP TABLE IF EXISTS Expediente_JSON;
 GO
 
+
 CREATE TABLE Expediente_JSON
 (
     id_expediente INT IDENTITY(1,1) PRIMARY KEY,
     id_transplante INT NOT NULL,
     datos_json NVARCHAR(MAX) NOT NULL,
     fecha_registro DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-    CONSTRAINT CK_Expediente_JSON_ISJSON CHECK (ISJSON(datos_json) > 0)
+    CONSTRAINT FK_Expediente_JSON_Transplante
+    FOREIGN KEY(id_transplante)
+    REFERENCES Transplante(id_transplante),
+    CONSTRAINT CK_Expediente_JSON_ISJSON 
+    CHECK (ISJSON(datos_json) > 0)
 );
+
 GO
 
+
 -------------------------------------------------------------------
-/* 3) INSERCION DE DATOS JSON DESDE LAS TABLAS DEL PROYECTO
+/*
+3) INSERCION DE DATOS JSON DESDE LAS TABLAS DEL PROYECTO
+
 Se arma un JSON completo con datos de:
+
 - Transplante
 - Donante
 - Receptor
 - Organo
 - TipoOrgano
 - Hospital
-- Doctor */
+- Doctor
+
+La relación con el donante se obtiene mediante Organo.
+*/
 -------------------------------------------------------------------
 
-INSERT INTO Expediente_JSON (id_transplante, datos_json)
+INSERT INTO Expediente_JSON
+(
+    id_transplante,
+    datos_json
+)
 SELECT
     t.id_transplante,
-    JSON_QUERY((
-        SELECT
-            t.id_transplante AS id_transplante,
-            CONVERT(VARCHAR(10), t.fecha_trasplante, 120) AS fecha_trasplante,
-            CASE t.estado
-                WHEN 0 THEN 'En proceso'
-                WHEN 1 THEN 'Finalizado'
-                ELSE 'Sin estado'
-            END AS estado,
-            t.observacion AS observacion,
-
-            JSON_QUERY((
-                SELECT
-                    d.id_donante,
-                    d.nombre,
-                    d.apellido,
-                    d.edad,
-                    d.genero,
-                    d.peso,
-                    d.patologia,
-                    d.tipoSangre,
-                    d.telefono
-                FROM Donante d
-                WHERE d.id_donante = t.id_donante
-                FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-            )) AS donante,
-
-            JSON_QUERY((
-                SELECT
-                    r.id_receptor,
-                    r.nombre,
-                    r.apellido,
-                    r.edad,
-                    r.genero,
-                    r.peso,
-                    r.tipo_sangre,
-                    r.telefono,
-                    r.dni
-                FROM Receptor r
-                WHERE r.id_receptor = t.id_receptor
-                FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-            )) AS receptor,
-
-            JSON_QUERY((
-                SELECT
-                    o.id_organo,
-                    o.estado AS estado_organo,
-                    tp.tipo AS tipo_organo
-                FROM Organo o
-                INNER JOIN TipoOrgano tp
-                    ON o.id_tipoOrgano = tp.id_tipoOrgano
-                WHERE o.id_organo = t.id_organo
-                FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-            )) AS organo,
-
-            JSON_QUERY((
-                SELECT
-                    h.id_hospital,
-                    h.nombre_hospital,
-                    h.direccion
-                FROM Hospital h
-                WHERE h.id_hospital = t.id_hospital
-                FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-            )) AS hospital,
-
-            JSON_QUERY((
-                SELECT
-                    doc.id_doctor,
-                    doc.nombre,
-                    doc.apellido,
-                    doc.profesion,
-                    doc.dni,
-                    doc.telefono
-                FROM Doctor doc
-                WHERE doc.id_doctor = t.id_doctor
-                FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-            )) AS doctor
-
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    )) AS datos_json
+    JSON_QUERY
+    (
+        (
+            SELECT
+                t.id_transplante AS id_transplante,
+                CONVERT(VARCHAR(10),
+                t.fecha_trasplante,120)
+                AS fecha_trasplante,
+                t.estado AS estado,
+                t.observacion AS observacion,
+                JSON_QUERY
+                (
+                    (
+                        SELECT
+                            d.id_donante,
+                            d.nombre,
+                            d.apellido,
+                            d.edad,
+                            d.genero,
+                            d.peso,
+                            d.patologia,
+                            d.tipoSangre,
+                            d.telefono
+                        FROM Donante d
+                        WHERE d.id_donante = o.id_donante
+                        FOR JSON PATH,
+                        WITHOUT_ARRAY_WRAPPER
+                    )
+                ) AS donante,
+               JSON_QUERY
+                (
+                    (
+                        SELECT
+                            r.id_receptor,
+                            r.nombre,
+                            r.apellido,
+                            r.edad,
+                            r.genero,
+                            r.peso,
+                            r.tipo_sangre,
+                            r.telefono,
+                            r.dni
+                        FROM Receptor r
+                        WHERE r.id_receptor = t.id_receptor
+                        FOR JSON PATH,
+                        WITHOUT_ARRAY_WRAPPER
+                    )
+                ) AS receptor,
+                JSON_QUERY
+                (
+                    (
+                        SELECT
+                            o.id_organo,
+                            o.estado AS estado_organo,
+                            tp.tipo AS tipo_organo
+                        FROM Organo o
+                        INNER JOIN TipoOrgano tp
+                        ON o.id_tipoOrgano = tp.id_tipoOrgano
+                        WHERE o.id_organo = t.id_organo
+                        FOR JSON PATH,
+                        WITHOUT_ARRAY_WRAPPER
+                    )
+                ) AS organo,
+                JSON_QUERY
+                (
+                    (
+                        SELECT
+                            h.id_hospital,
+                            h.nombre_hospital,
+                            h.direccion
+                        FROM Hospital h
+                        WHERE h.id_hospital = t.id_hospital
+                        FOR JSON PATH,
+                        WITHOUT_ARRAY_WRAPPER
+                    )
+                ) AS hospital,
+                JSON_QUERY
+                (
+                    (
+                        SELECT
+                            doc.id_doctor,
+                            doc.nombre,
+                            doc.apellido,
+                            doc.profesion,
+                            doc.dni,
+                            doc.telefono
+                        FROM Doctor doc
+                        WHERE doc.id_doctor = t.id_doctor
+                        FOR JSON PATH,
+                        WITHOUT_ARRAY_WRAPPER
+                    )
+                ) AS doctor
+            FOR JSON PATH,
+            WITHOUT_ARRAY_WRAPPER
+        )
+    )
 FROM Transplante t
-INNER JOIN Donante d     ON t.id_donante = d.id_donante
-INNER JOIN Receptor r    ON t.id_receptor = r.id_receptor
-INNER JOIN Organo o      ON t.id_organo = o.id_organo
-INNER JOIN TipoOrgano tp ON o.id_tipoOrgano = tp.id_tipoOrgano
-INNER JOIN Hospital h    ON t.id_hospital = h.id_hospital
-INNER JOIN Doctor doc    ON t.id_doctor = doc.id_doctor;
+INNER JOIN Organo o
+ON t.id_organo = o.id_organo;
+
 GO
 
 -------------------------------------------------------------------
                     -- 4) CONSULTAS JSON
 -------------------------------------------------------------------
-
 -- Consultar campos puntuales del JSON
 SELECT
     id_expediente,
-    JSON_VALUE(datos_json, '$.estado') AS estado,
-    JSON_VALUE(datos_json, '$.donante.nombre') AS nombre_donante,
-    JSON_VALUE(datos_json, '$.donante.apellido') AS apellido_donante,
-    JSON_VALUE(datos_json, '$.receptor.nombre') AS nombre_receptor,
-    JSON_VALUE(datos_json, '$.organo.tipo_organo') AS tipo_organo,
-    JSON_VALUE(datos_json, '$.hospital.nombre_hospital') AS hospital
+    JSON_VALUE(datos_json,'$.estado') AS estado,
+    JSON_VALUE(datos_json,'$.donante.nombre') AS nombre_donante,
+    JSON_VALUE(datos_json,'$.donante.apellido') AS apellido_donante,
+    JSON_VALUE(datos_json,'$.receptor.nombre') AS nombre_receptor,
+    JSON_VALUE(datos_json,'$.organo.tipo_organo') AS tipo_organo,
+    JSON_VALUE(datos_json,'$.hospital.nombre_hospital') AS hospital
 FROM Expediente_JSON;
 
 -- Consultar un objeto completo anidado
 SELECT
     id_expediente,
-    JSON_QUERY(datos_json, '$.donante') AS DonanteCompleto,
-    JSON_QUERY(datos_json, '$.receptor') AS ReceptorCompleto
+    JSON_QUERY(datos_json,'$.donante') AS DonanteCompleto,
+    JSON_QUERY(datos_json,'$.receptor') AS ReceptorCompleto
 FROM Expediente_JSON;
 
 -- Filtrar por un valor especifico del JSON
 SELECT
     id_expediente,
-    JSON_VALUE(datos_json, '$.donante.nombre') AS NombreDonante,
-    JSON_VALUE(datos_json, '$.organo.tipo_organo') AS TipoOrgano
+    JSON_VALUE(datos_json,'$.donante.nombre')AS NombreDonante,
+    JSON_VALUE(datos_json,'$.organo.tipo_organo')AS TipoOrgano
 FROM Expediente_JSON
-WHERE JSON_VALUE(datos_json, '$.organo.tipo_organo') = 'Rin';
+WHERE JSON_VALUE(datos_json,'$.organo.tipo_organo') ='Riñón';
 
 -- Filtrar por estado del trasplante
 SELECT
     id_expediente,
-    JSON_VALUE(datos_json, '$.estado') AS Estado,
-    JSON_VALUE(datos_json, '$.observacion') AS Observacion
+    JSON_VALUE(datos_json,'$.estado') AS Estado,
+    JSON_VALUE(datos_json,'$.observacion') AS Observacion
 FROM Expediente_JSON
-WHERE JSON_VALUE(datos_json, '$.estado') = 'Finalizado';
+WHERE JSON_VALUE(datos_json,'$.estado')='Finalizado';
+
 
 -------------------------------------------------------------------
                    -- 5) MOSTRAR JSON EN FILAS
@@ -220,57 +247,72 @@ FROM Expediente_JSON e
 CROSS APPLY OPENJSON(e.datos_json)
 WITH
 (
-    nombre_donante NVARCHAR(50) '$.donante.nombre',
+    nombre_donante NVARCHAR(50)'$.donante.nombre',
     apellido_donante NVARCHAR(50) '$.donante.apellido',
-    tipo_organo NVARCHAR(50) '$.organo.tipo_organo',
-    nombre_hospital NVARCHAR(100) '$.hospital.nombre_hospital',
-    estado NVARCHAR(20) '$.estado'
+    tipo_organo NVARCHAR(50)'$.organo.tipo_organo',
+    nombre_hospital NVARCHAR(100)'$.hospital.nombre_hospital',
+    estado NVARCHAR(20)'$.estado'
 ) AS x;
+
 
 -------------------------------------------------------------------
                 -- 6) ACTUALIZACION DE DATOS JSON
 -------------------------------------------------------------------
-
 -- Actualizar un valor dentro del JSON
 UPDATE Expediente_JSON
-SET datos_json = JSON_MODIFY(datos_json, '$.observacion', 'Paciente estable luego de la cirugia')
+SET datos_json = JSON_MODIFY
+(
+    datos_json,
+    '$.observacion',
+    'Paciente estable luego de la cirugía'
+)
 WHERE id_transplante = 4;
 
 -- Agregar un nuevo atributo JSON
 UPDATE Expediente_JSON
-SET datos_json = JSON_MODIFY(datos_json, '$.seguimiento', 'Control postoperatorio en 48 horas')
+SET datos_json = JSON_MODIFY
+(
+    datos_json,
+    '$.seguimiento',
+    'Control postoperatorio en 48 horas'
+)
 WHERE id_transplante = 4;
 
 -- Agregar un dato al objeto anidado
+-- Se agrega dirección alternativa del hospital
 UPDATE Expediente_JSON
-SET datos_json = JSON_MODIFY(datos_json, '$.hospital.telefono', '3794555555')
+SET datos_json = JSON_MODIFY
+(
+    datos_json,
+    '$.hospital.observacion',
+    'Hospital autorizado para trasplantes'
+)
 WHERE id_transplante = 1;
 
 -------------------------------------------------------------------
             -- 7) ELIMINAR REGISTROS BASADOS EN JSON
 -------------------------------------------------------------------
-
--- Eliminar registros que tengan estado "En proceso"
+-- Eliminar registros que tengan estado "En Proceso"
 DELETE FROM Expediente_JSON
-WHERE JSON_VALUE(datos_json, '$.estado') = 'En proceso';
+WHERE JSON_VALUE(datos_json,'$.estado')='En Proceso';
+
 
 -------------------------------------------------------------------
            -- 8) OPTIMIZACION DE CONSULTAS JSON
 -------------------------------------------------------------------
-
--- Columnas calculadas para evitar leer el JSON repetidamente
 ALTER TABLE Expediente_JSON
 ADD
-    estado_json AS LEFT(JSON_VALUE(datos_json, '$.estado'), 20) PERSISTED,
-    tipo_organo_json AS LEFT(JSON_VALUE(datos_json, '$.organo.tipo_organo'), 50) PERSISTED,
-    nombre_donante_json AS LEFT(JSON_VALUE(datos_json, '$.donante.nombre'), 50) PERSISTED;
+estado_json AS LEFT(JSON_VALUE(datos_json,'$.estado'),20) PERSISTED,
+tipo_organo_json AS LEFT(JSON_VALUE(datos_json,'$.organo.tipo_organo'),50) PERSISTED,
+nombre_donante_json AS LEFT(JSON_VALUE(datos_json,'$.donante.nombre'),50) PERSISTED;
+
 GO
 
--- Indice sobre columnas calculadas
 CREATE INDEX IX_Expediente_JSON_Tipo_Estado
-ON Expediente_JSON (tipo_organo_json, estado_json)
-INCLUDE (nombre_donante_json);
+ON Expediente_JSON(tipo_organo_json,estado_json)
+INCLUDE(nombre_donante_json);
 GO
+
 
 -- Consulta optimizada usando columnas calculadas
 SELECT
@@ -279,15 +321,15 @@ SELECT
     tipo_organo_json AS tipo_organo,
     estado_json AS estado
 FROM Expediente_JSON
-WHERE tipo_organo_json = 'Rin'
-AND estado_json = 'Finalizado';
+WHERE tipo_organo_json='Riñón'
+AND estado_json='Finalizado';
 
 -------------------------------------------------------------------
            -- 9) CONSULTA FINAL Y VERIFICACION
 -------------------------------------------------------------------
-
 SELECT *
 FROM Expediente_JSON;
+
 
 -- Exportar toda la tabla JSON
 SELECT *

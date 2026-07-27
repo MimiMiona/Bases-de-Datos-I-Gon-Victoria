@@ -168,7 +168,7 @@ GO
 
 -- Insertar un donante
 EXEC spInsertarDonante
-10,
+11,
 'Carlos',
 'Lopez',
 35,
@@ -176,7 +176,7 @@ EXEC spInsertarDonante
 82,
 'Ninguna',
 'O+',
-'3794123456',
+'3794143456',
 '1234';
 
 
