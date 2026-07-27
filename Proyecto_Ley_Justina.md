@@ -85,8 +85,6 @@ Estos fueron los resultados de ambos diagramas:
 
 DICCIONARIO DE DATOS\
 Este diccionario de datos documenta las tablas, campos y relaciones de la base de datos del proyecto. Su objetivo es facilitar la comprensión, el desarrollo y el mantenimiento del sistema, asegurando la correcta gestión e integridad de la información.
-Accesso al documento [PDF](DER/DiccionarioDeDatos.pdf) del diccionario de datos.
-
 
 # REGLAS DE NEGOCIO
 Se definieron tambien las reglas de negocios para que se mantengan las consistencia de los datos
@@ -102,3 +100,46 @@ Se definieron tambien las reglas de negocios para que se mantengan las consisten
 10. RN-10. Si el trasplante no puede concretarse, la asignación será cancelada. El receptor permanecerá o volverá a la lista de espera y el órgano podrá volver al estado Disponible, siempre que continúe siendo apto para el trasplante; en caso contrario, será marcado como Descartado.
 11. RN-11. Cada médico pertenece a un hospital habilitado para realizar procedimientos de donación y trasplante, desde el cual participa en los procedimientos registrados por el sistema.
 12. RN-12. El personal administrativo pertenece a un hospital de referencia y es responsable de la gestión administrativa del proceso de donación y trasplante. Entre sus funciones se encuentran el registro y actualización de donantes, receptores, órganos disponibles, asignaciones y lista de espera, sin intervenir en los procedimientos médicos.
+
+# Desarrollo del Sistema
+El sistema de gestión de donación y trasplante de órganos fue desarrollado utilizando SQL Server como gestor de base de datos. Inicialmente se realizó el modelado conceptual y relacional, definiendo las entidades principales, sus atributos y las relaciones necesarias para representar el proceso de donación y trasplante. Posteriormente, se implementó la estructura de la base de datos mediante la creación de tablas, claves primarias, claves foráneas y restricciones de integridad (PRIMARY KEY, FOREIGN KEY, UNIQUE y CHECK), con el objetivo de garantizar la consistencia y validez de la información almacenada. Finalmente, se efectuó la carga de datos de prueba para verificar el correcto funcionamiento de las relaciones entre las tablas y validar la estructura implementada.
+
+# Desarrollo de los Temas
+
+Tema 1: El manejo de permisos en SQL Server permite controlar el acceso de los usuarios a los distintos objetos de la base de datos mediante permisos, usuarios y roles. La correcta administración de estos mecanismos protege la información, garantiza la confidencialidad e integridad de los datos y facilita la asignación de privilegios según las responsabilidades de cada usuario. En el proyecto Ley Justina se implementaron usuarios con distintos niveles de acceso, utilizando permisos específicos y roles para restringir las operaciones permitidas sobre la información de donantes, receptores, órganos y trasplantes.
+
+Tema 2: Los procedimientos y funciones almacenadas permiten encapsular lógica SQL para reutilizar procesos de forma segura y eficiente. Los procedimientos almacenados se utilizaron para ejecutar operaciones de inserción, actualización y eliminación de datos, mientras que las funciones facilitaron la obtención de información mediante consultas reutilizables. Su implementación en el proyecto Ley Justina contribuyó a mejorar la organización del código, reducir la duplicación de consultas y fortalecer la seguridad y el mantenimiento de la base de datos.
+
+Tema 3: La optimización de consultas mediante índices permite mejorar el rendimiento del motor de base de datos reduciendo el tiempo necesario para recuperar información. Se analizaron índices agrupados y no agrupados, observando cómo optimizan búsquedas, filtros y relaciones entre tablas. En el proyecto Ley Justina, la utilización de índices sobre claves primarias, claves foráneas y campos de búsqueda frecuente favoreció un acceso más eficiente a la información y un mejor desempeño general del sistema.
+
+Tema 4: El manejo de datos JSON en SQL Server permite almacenar e intercambiar información semiestructurada dentro de una base de datos relacional mediante funciones como OPENJSON, JSON_VALUE, JSON_QUERY y JSON_MODIFY. En el proyecto Ley Justina, esta tecnología se aplicó para representar expedientes de trasplante en una estructura flexible, integrando información de donantes, receptores, órganos y hospitales en un único documento, facilitando su consulta, procesamiento e integración con otros sistemas.
+
+# CAPÍTULO V: CONCLUSIONES 
+El desarrollo del proyecto "Ley Justina" permitió aplicar los conocimientos adquiridos tanto teoricos como practicos lo cual nos permitio implementar una base de datos orientada a la gestión del proceso de donación y trasplante de órganos. Siendo posible organizar la información de donantes, receptores, hospitales, profesionales de la salud, órganos, listas de espera y trasplantes, garantizando la integridad y consistencia de los datos.
+
+En primer lugar, la elaboración de los modelos conceptual y relacional permitió comprender el funcionamiento general del proceso de donación y trasplante de órganos, definiendo correctamente las entidades, relaciones y restricciones necesarias para representar la realidad del sistema. Posteriormente, la implementación de la base de datos en SQL Server permitió aplicar claves primarias, claves foráneas y restricciones de integridad que aseguran un almacenamiento confiable de la información.
+
+Asimismo, el desarrollo de los distintos temas de la asignatura permitió incorporar herramientas que fortalecen el funcionamiento y la administración de la base de datos:
+
+* El manejo de permisos y roles permitió comprender la importancia de controlar el acceso a la información, asignando distintos niveles de autorización según las funciones de cada usuario y protegiendo los datos almacenados.
+
+* La implementación de procedimientos y funciones almacenadas facilitó la reutilización de código, la centralización de la lógica de negocio y la ejecución eficiente de operaciones y consultas frecuentes sobre la base de datos.
+
+* La optimización mediante índices permitió analizar cómo estas estructuras mejoran el rendimiento de las consultas, reduciendo el tiempo de acceso a la información y favoreciendo un mejor desempeño del sistema.
+
+* El manejo de datos en formato JSON permitió conocer una alternativa para almacenar y procesar información semiestructurada dentro de SQL Server, facilitando la integración de datos y la comunicación con aplicaciones modernas.
+
+En conclusion, todos estos temas nos permitio integrar conceptos fundamentales para el diseño y administracion de la base de datos relacionales, demostrando la importancia de una correcta planificacion, modelado e implementacion para la creacion de una base de datos que el dia de mañana se podria expandir o mejorar.
+
+# CAPÍTULO VI: BIBLIOGRAFÍA. 
+CAPÍTULO VI: BIBLIOGRAFÍA
+1. Microsoft. (2025). Authorization (Database Engine). Microsoft Learn. https://learn.microsoft.com/es-es/sql/relational-databases/security/authentication-access/authorization-database-engine
+2. Microsoft. (2025). GRANT Object Permissions (Transact-SQL). Microsoft Learn. https://learn.microsoft.com/es-es/sql/t-sql/statements/grant-object-permissions-transact-sql
+3. Microsoft. (2025). Stored Procedures (Database Engine). Microsoft Learn. https://learn.microsoft.com/es-es/sql/relational-databases/stored-procedures/stored-procedures-database-engine
+4. W3Schools. SQL Server Stored Procedures. https://www.w3schools.com/sql/sql_stored_procedures.asp
+5. Microsoft. (2025). User-defined Functions (Database Engine). Microsoft Learn. https://learn.microsoft.com/es-es/sql/relational-databases/user-defined-functions/user-defined-functions
+6. Microsoft. (2025). SQL Server Index Design Guide. Microsoft Learn. https://learn.microsoft.com/es-es/sql/relational-databases/sql-server-index-design-guide
+7. Microsoft. (2025). Indexes - SQL Server. Microsoft Learn. https://learn.microsoft.com/es-es/sql/relational-databases/indexes/indexes
+8. Microsoft. (2025). JSON Data (SQL Server). Microsoft Learn. https://learn.microsoft.com/es-es/sql/relational-databases/json/json-data-sql-server
+9. Microsoft. (2025). JSON Functions (Transact-SQL). Microsoft Learn. https://learn.microsoft.com/es-es/sql/t-sql/functions/json-functions-transact-sql
+10. W3Schools. JSON Introduction. https://www.w3schools.com/js/js_json_intro.asp
